@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Master - Your Digital Culinary Workstation</title>
+
+  <!-- IBM Carbon Design System -->
+  <link rel="stylesheet" href="https://unpkg.com/@carbon/styles/css/styles.min.css">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Carbon Icons -->
+  <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/icons.min.js"></script>
+</head>
+<body class="cds--g10">
+
+  <!-- Header -->
+  <header class="cds--header">
+    <a class="cds--header__name" href="/">
+      <span class="cds--header__name--prefix">IBM</span>
+      Recipe Master
+    </a>
+    <nav class="cds--header__nav">
+      <ul class="cds--header__menu-bar">
+        <li>
+          <a class="cds--header__menu-item" href="#search-section">Search</a>
+        </li>
+        <li>
+          <a class="cds--header__menu-item" href="#categories-section">Categories</a>
+        </li>
+        <li>
+          <a class="cds--header__menu-item" href="#" id="toggle-cookbook-btn">My Cookbook (<span id="cookbook-count">0</span>)</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Search Section -->
+    <section id="search-section" class="search-section">
+      <div class="cds--grid">
+        <div class="cds--row">
+          <div class="cds--col-lg-16">
+            <h1 class="page-title">Discover Delicious Recipes</h1>
+            <p class="page-subtitle">Search by ingredient and build your personal cookbook</p>
+          </div>
+        </div>
+
+        <div class="cds--row search-row">
+          <div class="cds--col-lg-12 cds--col-md-6">
+            <div class="cds--form-item">
+              <div class="cds--search cds--search--lg">
+                <label id="search-label" class="cds--label" for="search-input">Search recipes</label>
+                <input
+                  type="text"
+                  id="search-input"
+                  class="cds--search-input"
+                  placeholder="Enter an ingredient (e.g., chicken, pasta, beef)"
+                  aria-labelledby="search-label"
+                >
+                <svg class="cds--search-magnifier" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M15 14.3L10.7 10c1.9-2.3 1.6-5.8-.7-7.7S4.2.7 2.3 3 .7 8.8 3 10.7c2 1.7 5 1.7 7 0l4.3 4.3.7-.7zM2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z"></path>
+                </svg>
+                <button class="cds--search-close cds--search-close--hidden" type="button" aria-label="Clear search">
+                  <svg width="16" height="16" viewBox="0 0 16 16">
+                    <path d="M12 4.7L11.3 4 8 7.3 4.7 4 4 4.7 7.3 8 4 11.3 4.7 12 8 8.7 11.3 12 12 11.3 8.7 8z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="cds--col-lg-4 cds--col-md-2">
+            <button id="search-btn" class="cds--btn cds--btn--primary search-btn" type="button">
+              Search Recipes
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories-section" class="categories-section">
+      <div class="cds--grid">
+        <div class="cds--row">
+          <div class="cds--col-lg-16">
+            <h2 class="section-title">Browse by Category</h2>
+            <p class="section-subtitle">Explore recipes by meal category</p>
+          </div>
+        </div>
+        <div class="cds--row">
+          <div class="cds--col-lg-16">
+            <div id="categories-loading" class="categories-loading">
+              <div class="cds--loading cds--loading--small">
+                <svg class="cds--loading__svg" viewBox="0 0 100 100">
+                  <circle class="cds--loading__stroke" cx="50" cy="50" r="44"></circle>
+                </svg>
+              </div>
+              <span>Loading categories...</span>
+            </div>
+            <div id="categories-container" class="categories-container hidden">
+              <!-- Category cards will be dynamically inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading-container hidden">
+      <div class="cds--loading">
+        <svg class="cds--loading__svg" viewBox="0 0 100 100">
+          <circle class="cds--loading__stroke" cx="50" cy="50" r="44"></circle>
+        </svg>
+      </div>
+      <p>Searching for recipes...</p>
+    </div>
+
+    <!-- Error/Empty State -->
+    <div id="message-container" class="message-container hidden">
+      <div class="cds--inline-notification cds--inline-notification--warning">
+        <div class="cds--inline-notification__details">
+          <svg class="cds--inline-notification__icon" width="20" height="20" viewBox="0 0 20 20">
+            <path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm-.8 4h1.5v7H9.2V5zm.8 11c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z"></path>
+          </svg>
+          <div class="cds--inline-notification__text-wrapper">
+            <p class="cds--inline-notification__title" id="message-title">No meals found</p>
+            <p class="cds--inline-notification__subtitle" id="message-subtitle">Try searching with a different ingredient.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recipe Results Grid -->
+    <section id="results-section" class="results-section">
+      <div class="cds--grid">
+        <div class="cds--row">
+          <div class="cds--col-lg-16">
+            <h2 id="results-title" class="section-title hidden">Search Results</h2>
+          </div>
+        </div>
+        <div id="recipe-grid" class="cds--row recipe-grid">
+          <!-- Recipe cards will be dynamically inserted here -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Cookbook Sidebar -->
+  <aside id="cookbook-sidebar" class="cookbook-sidebar">
+    <div class="sidebar-header">
+      <h2>My Cookbook</h2>
+      <button id="close-sidebar-btn" class="cds--btn cds--btn--ghost cds--btn--icon-only" aria-label="Close sidebar">
+        <svg width="20" height="20" viewBox="0 0 32 32">
+          <path d="M24 9.4L22.6 8 16 14.6 9.4 8 8 9.4 14.6 16 8 22.6 9.4 24 16 17.4 22.6 24 24 22.6 17.4 16 24 9.4z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-content">
+      <div id="empty-cookbook" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 32 32" class="empty-icon">
+          <path d="M19 10h7v2h-7zM19 6h7v2h-7zM19 14h7v2h-7zM6 10h7v2H6zM6 6h7v2H6zM6 14h7v2H6z"></path>
+          <path d="M28 4H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 22H4V6h11v12l3.5-3 3.5 3V6h6z"></path>
+        </svg>
+        <p>Your cookbook is empty</p>
+        <span>Search for recipes and save your favorites here</span>
+      </div>
+
+      <ul id="cookbook-list" class="cookbook-list">
+        <!-- Saved recipes will be listed here -->
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <button id="export-btn" class="cds--btn cds--btn--primary export-btn" disabled>
+        <svg width="16" height="16" viewBox="0 0 32 32" style="margin-right: 8px;">
+          <path d="M26 24v4H6v-4H4v4a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2v-4zM6 12l1.4 1.4L15 5.8V24h2V5.8l7.6 7.6L26 12 16 2 6 12z"></path>
+        </svg>
+        Export Cookbook
+      </button>
+      <button id="clear-cookbook-btn" class="cds--btn cds--btn--danger--ghost clear-btn" disabled>
+        Clear All
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for sidebar -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- Recipe Detail Modal -->
+  <div id="recipe-modal" class="cds--modal">
+    <div class="cds--modal-container">
+      <div class="cds--modal-header">
+        <h3 class="cds--modal-header__heading" id="modal-title">Recipe Details</h3>
+        <button class="cds--modal-close" id="modal-close-btn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 32 32">
+            <path d="M24 9.4L22.6 8 16 14.6 9.4 8 8 9.4 14.6 16 8 22.6 9.4 24 16 17.4 22.6 24 24 22.6 17.4 16 24 9.4z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="cds--modal-content" id="modal-content">
+        <!-- Modal content will be dynamically inserted -->
+      </div>
+      <div class="cds--modal-footer">
+        <button class="cds--btn cds--btn--secondary" id="modal-cancel-btn">Close</button>
+        <button class="cds--btn cds--btn--primary" id="modal-save-btn">
+          <svg width="16" height="16" viewBox="0 0 32 32" style="margin-right: 8px;">
+            <path d="M22.5 4c-2 0-3.9.8-5.3 2.2L16 7.4l-1.1-1.1C12 3.3 7.2 3.3 4.3 6.2 1.3 9.2 1.3 14 4.2 17l11.1 11.1c.4.4 1 .4 1.4 0L27.8 17c2.9-3 2.9-7.8 0-10.8-1.4-1.4-3.3-2.2-5.3-2.2z"></path>
+          </svg>
+          Save to Cookbook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
